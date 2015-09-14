@@ -24,8 +24,6 @@ Tree = React.createClass({
 
   },
   render() {
-    console.log(this.state.eventBubbles);
-
     return (
       <div id="event-0" className="node">
         <div id="event-1" className="node">
@@ -42,7 +40,6 @@ Tree = React.createClass({
   },
   showEvent(event) {
     let currId = parseInt(event.currentTarget.id.match(/([0-9])/g)[0]);
-    console.log(currId);
     let newState = _.map(this.state.eventBubbles, (bubble, index) => {
       if (currId === index) {
         return true;
