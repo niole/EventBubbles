@@ -1,15 +1,23 @@
 Tree = React.createClass({
   componentDidMount() {
     const one = document.getElementById("one");
+    const zero = document.getElementById("zero");
+    const two = document.getElementById("two");
+
+
     one.addEventListener('click', function() {
       event.preventDefault();
       console.log('click '+1);
     });
-    const zero = document.getElementById("zero");
     zero.addEventListener('click', function() {
       event.preventDefault();
       console.log('click '+0);
     });
+    two.addEventListener('click', function() {
+      event.preventDefault();
+      console.log('click '+2);
+    });
+
 
   },
   render() {
@@ -24,7 +32,7 @@ Tree = React.createClass({
     );
   },
   startBubbles() {
-    event.preventDefault();A
+    event.preventDefault();
     console.log('start');
   }
 });
