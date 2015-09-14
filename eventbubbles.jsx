@@ -15,7 +15,6 @@ Tree = React.createClass({
     zero.addEventListener('click', function() {
       event.preventDefault();
       this.showEvent(event);
-
     }.bind(this));
     two.addEventListener('click', function() {
       event.preventDefault();
@@ -25,22 +24,31 @@ Tree = React.createClass({
 
   },
   render() {
+    console.log(this.state.eventBubbles);
+
     return (
       <div id="event-0" className="node">
         <div id="event-1" className="node">
-          <div onClick={this.startBubble} id="event-2" className="node">
+          <div id="event-2" className="node">
             click
+            {this.showBubbles(this.state.eventBubbles)}
           </div>
         </div>
       </div>
     );
   },
-  startBubbles() {
-    event.preventDefault();
-    console.log('start');
+  showBubbles(eventArray) {
+    return <Bubbles bubbleData={this.state.eventBubbles}/>;
   },
-  showEvent(event, n) {
-    let currId = event.currentTarget.id.match(/([0-9])/g);
+  showEvent(event) {
+    let currId = parseInt(event.currentTarget.id.match(/([0-9])/g)[0]);
     console.log(currId);
+    let newState = _.map(this.state.eventBubbles, (bubble, index) => {
+      if (currId === index) {
+        return true;
+      }
+      return false;
+    });
+    this.setState({eventBubbles: newState});
   }
 });

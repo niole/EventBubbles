@@ -9,3 +9,5 @@ autopublish
 insecure
 react
 kadira:flow-router
+erasaur:meteor-lodash
+d3js:d3
