@@ -6,10 +6,8 @@ Bubbles = React.createClass({
   },
   componentDidMount() {
     this.buildBubbles(this.makeData(this.props.bubbleData));
-
   },
   componentDidUpdate() {
-    console.log('CDU');
     this.buildBubbles(this.makeData(this.props.bubbleData));
   },
   makeData(data) {
@@ -28,6 +26,10 @@ Bubbles = React.createClass({
     });
   },
   buildBubbles(data) {
+    //idea: no callback on d3 execution
+    //settimeout when buildBubbles called if this.nextData still has data, timeout calls
+    //this.buildBubbles(this.makeData(this.nextData.shift()));
+
     const svgContainer = d3.select(this.getDOMNode());
     let circle = svgContainer.selectAll("circles")
                   .data(data, function(d) {return d.i;})
@@ -35,15 +37,11 @@ Bubbles = React.createClass({
     circle
       .enter()
       .append("circle")
-      .attr("cx", function (d) {
-        console.log(d.cx);
-      return d.cx; })
+      .transition().duration(500)
+      .attr("cx", function (d) { return d.cx; })
       .attr("cy", function (d) { return "5px"; })
       .attr("r", function (d) { return "15px"; })
-      .style("fill", function(d) {
-        console.log(d.color);
-        return d.color;
-      });
+      .style("fill", function(d) { return d.color; });
 
     circle.exit()
         .remove();
