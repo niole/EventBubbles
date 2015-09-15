@@ -13,10 +13,10 @@ Bubbles = React.createClass({
   makeData(data) {
     const xScale = d3.scale.linear()
           .domain([0,data.length])
-          .range([0,this.props.width]);
+          .range([this.props.height, 0]);
 
     return _.map(data, (d,i) => {
-        return {i: i, cx: xScale(i), color: d ? 'green' : 'pink'};
+        return {i: i, cy: xScale(i), color: d ? '#ff0080' : 'white'};
       });
   },
   render() {
@@ -26,22 +26,25 @@ Bubbles = React.createClass({
     });
   },
   buildBubbles(data) {
-    //idea: no callback on d3 execution
-    //settimeout when buildBubbles called if this.nextData still has data, timeout calls
-    //this.buildBubbles(this.makeData(this.nextData.shift()));
-
     const svgContainer = d3.select(this.getDOMNode());
     let circle = svgContainer.selectAll("circles")
-                  .data(data, function(d) {return d.i;})
+                  .data(data, function(d) {return d.i;});
 
     circle
       .enter()
       .append("circle")
-      .transition().duration(500)
-      .attr("cx", function (d) { return d.cx; })
-      .attr("cy", function (d) { return "5px"; })
-      .attr("r", function (d) { return "15px"; })
-      .style("fill", function(d) { return d.color; });
+      .attr("cx", function (d) { return "15px"; })
+      .attr("cy", function (d) { return d.cy; })
+      .attr("r", function (d) { return (d.i+1)*5; })
+      .style("fill", function(d) { return d.color; })
+      .attr("opacity", 0)
+      .transition().duration(1000)
+      .attr("opacity", .9)
+      .attr("cy", function (d) { return d.cy-100; });
+
+
+
+
 
     circle.exit()
         .remove();
