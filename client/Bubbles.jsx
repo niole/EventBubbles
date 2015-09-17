@@ -1,23 +1,75 @@
 Bubbles = React.createClass({
   propTypes: {
-    bubbleData: React.PropTypes.arrayOf(React.PropTypes.bool),
+    bubbleData: React.PropTypes.object,
     width: React.PropTypes.number,
     height: React.PropTypes.number
   },
   componentDidMount() {
-    this.buildBubbles(this.makeData(this.props.bubbleData));
+    this.data = this.makeData(this.props.bubbleData);
+    this.svgContainer = d3.select(this.getDOMNode());
+
+    this.circle = this.svgContainer.selectAll("circles")
+                  .data(this.data, function(d) {return "circle-"+d.i;});
+
+    this.circle
+      .enter()
+      .append("circle");
+
+    this.circle
+      .attr("cx", function (d) { return "15px"; })
+      .attr("cy", function (d) { return d.cy; })
+      .attr("r", function (d) { return (d.i+1)*5; })
+      .style("fill", function(d) { return d.color; })
+      .attr("cy", function (d) { return d.cy-100; });
+
+    this.circle.exit()
+        .remove();
   },
-  componentDidUpdate() {
-    this.buildBubbles(this.makeData(this.props.bubbleData));
+  shouldComponentUpdate(nextProps, nextState) {
+      if (nextProps.bubbleData.index > -1) {
+        if (nextProps.bubbleData.index > 0) {
+          this.data[nextProps.bubbleData.index].color = '#ff0080';
+          this.data[nextProps.bubbleData.index-1].color = 'white';
+        } else {
+          this.data[nextProps.bubbleData.index].color = '#ff0080';
+        }
+      } else {
+        this.data[nextProps.bubbleData.length-1].color = 'white';
+      }
+
+    this.circle = this.svgContainer.selectAll("circle")
+                  .data(this.data, function(d) {return "circle-"+d.i;});
+    this.circle
+        .enter()
+        .append("circle");
+
+    this.circle
+        .select("circle");
+
+    this.circle
+      .attr("cx", function (d) { return "15px"; })
+      .attr("cy", function (d) { return d.cy; })
+      .attr("r", function (d) { return (d.i+1)*5; })
+      .style("fill", function(d) { return d.color; })
+      .transition().duration(1000)
+      .attr("cy", function (d) { return d.cy-100; });
+
+    this.circle
+        .exit()
+        .remove();
+
+
+  //  this.buildBubbles();
+    return false;
   },
   makeData(data) {
     const xScale = d3.scale.linear()
           .domain([0,data.length])
           .range([this.props.height, 0]);
 
-    return _.map(data, (d,i) => {
-        return {i: i, cy: xScale(i), color: d ? '#ff0080' : 'white'};
-      });
+    return _.map(_.range(data.length), i => {
+      return {i: i, cy: xScale(i), color: (data.index === i) ? '#ff0080' : 'white'};
+    });
   },
   render() {
     return React.DOM.svg({
@@ -26,28 +78,38 @@ Bubbles = React.createClass({
     });
   },
   buildBubbles(data) {
-    const svgContainer = d3.select(this.getDOMNode());
-    let circle = svgContainer.selectAll("circles")
-                  .data(data, function(d) {return d.i;});
+    console.log('this.data');
+    console.log(this.data);
 
-    circle
+    this.circle = this.svgContainer.selectAll("circle")
+                  .data(this.data, function(d) {
+                    console.log('d');
+                    console.log(d);
+
+                    return "circle-"+d.i;});
+    this.circle
       .enter()
-      .append("circle")
+      .append("circle");
+
+    this.circle = this.svgContainer.select("circle");
+
+    this.circle
       .attr("cx", function (d) { return "15px"; })
       .attr("cy", function (d) { return d.cy; })
       .attr("r", function (d) { return (d.i+1)*5; })
-      .style("fill", function(d) { return d.color; })
-      .attr("opacity", 0)
+      .style("fill", function(d) { 
+       console.log('color');
+       console.log(d.color);
+
+        return d.color; })
       .transition().duration(1000)
-      .attr("opacity", .9)
       .attr("cy", function (d) { return d.cy-100; });
 
-
-
-
-
-    circle.exit()
+    this.circle
+        .exit()
         .remove();
+
+
 
   }
 });

@@ -1,6 +1,6 @@
 Tree = React.createClass({
   getInitialState() {
-    return {eventBubbles: [false, false, false]};
+    return {eventBubbles: { index: -1, length: 3 }};
   },
   componentDidMount() {
     this.timeouts = [];
@@ -35,6 +35,8 @@ Tree = React.createClass({
     }
   },
   render() {
+    console.log('this.state.eventBubbles');
+    console.log(this.state.eventBubbles);
     return (
       <span>
         <div id="top-level" className="node">
@@ -50,15 +52,11 @@ Tree = React.createClass({
       </span>
     );
   },
-  resetEvents() {
-    console.log('reset');
-    this.setState({eventBubbles: [false, false, false]});
-  },
   showBubbles(eventArray) {
     return <Bubbles
             width={100}
             height={400}
-            bubbleData={this.state.eventBubbles}
+            bubbleData={eventArray}
             />;
   },
   showEvent(event) {
@@ -66,13 +64,7 @@ Tree = React.createClass({
     if (event) {
       currId = parseInt(event.currentTarget.id.match(/([0-9])/g)[0]);
     }
-    let newState = _.map(this.state.eventBubbles, (bubble, index) => {
-      if (currId === index) {
-        return true;
-      }
-      return false;
-    });
-    console.log(newState);
+    let newState = { index: isNaN(currId) ? -1 : currId, length: this.state.eventBubbles.length };
     return function() {
       this.timeouts.shift()
       setTimeout(this.timeouts[0], 1000);
