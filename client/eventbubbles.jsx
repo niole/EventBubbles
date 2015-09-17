@@ -35,8 +35,6 @@ Tree = React.createClass({
     }
   },
   render() {
-    console.log('this.state.eventBubbles');
-    console.log(this.state.eventBubbles);
     return (
       <span>
         <div id="top-level" className="node">

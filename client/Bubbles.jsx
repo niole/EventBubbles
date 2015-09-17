@@ -47,25 +47,22 @@ Bubbles = React.createClass({
         .select("circle");
 
     this.circle
-      .attr("cx", function (d) { return "15px"; })
       .attr("cy", function (d) { return d.cy; })
+      .attr("cx", function (d) { return "15px"; })
       .attr("r", function (d) { return (d.i+1)*5; })
-      .style("fill", function(d) { return d.color; })
       .transition().duration(1000)
-      .attr("cy", function (d) { return d.cy-100; });
+      .style("fill", function(d) { return d.color; })
 
     this.circle
         .exit()
         .remove();
 
-
-  //  this.buildBubbles();
     return false;
   },
   makeData(data) {
     const xScale = d3.scale.linear()
           .domain([0,data.length])
-          .range([this.props.height, 0]);
+          .range([this.props.height-10, 0]);
 
     return _.map(_.range(data.length), i => {
       return {i: i, cy: xScale(i), color: (data.index === i) ? '#ff0080' : 'white'};
@@ -76,40 +73,5 @@ Bubbles = React.createClass({
       width: this.props.width,
       height: this.props.height
     });
-  },
-  buildBubbles(data) {
-    console.log('this.data');
-    console.log(this.data);
-
-    this.circle = this.svgContainer.selectAll("circle")
-                  .data(this.data, function(d) {
-                    console.log('d');
-                    console.log(d);
-
-                    return "circle-"+d.i;});
-    this.circle
-      .enter()
-      .append("circle");
-
-    this.circle = this.svgContainer.select("circle");
-
-    this.circle
-      .attr("cx", function (d) { return "15px"; })
-      .attr("cy", function (d) { return d.cy; })
-      .attr("r", function (d) { return (d.i+1)*5; })
-      .style("fill", function(d) { 
-       console.log('color');
-       console.log(d.color);
-
-        return d.color; })
-      .transition().duration(1000)
-      .attr("cy", function (d) { return d.cy-100; });
-
-    this.circle
-        .exit()
-        .remove();
-
-
-
   }
 });
